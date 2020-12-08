@@ -5,6 +5,6 @@ import cyclistProfileController from "./controllers/cyclistProfileController";
 const router: Router = Router();
 
 router.get("/", welcomeController.index);
-router.use("/cyclistProfile", cyclistProfileController);
+router.use("/cyclist-profile", cyclistProfileController);
 
 export default router;

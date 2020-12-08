@@ -3,8 +3,6 @@ import cors from "cors";
 import routes from "./routes";
 import helmet from "helmet";
 import morgan from "morgan";
-import "reflect-metadata";
-import { createConnection } from "typeorm";
 import { Logger, ILogger } from "./utils";
 import nodeErrorHandler from "./middlewares/nodeErrorHandler";
 import config from "./config/config";

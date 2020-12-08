@@ -6,8 +6,13 @@ const CyclistProfileSchema = new mongoose.Schema({
     city: String,
     area: String,
     timestamp: Date,
-    address: { street: String, number: Number, neighborhood: String },
+    location: {
+      latitude: Number,
+      longitude: Number,
+    },
+    neighborhood: String,
     researcher_code: Number,
+    weekday: String,
     bike_type: String,
   },
   data: {
@@ -18,7 +23,7 @@ const CyclistProfileSchema = new mongoose.Schema({
       school: Number,
       leisure: Number,
     },
-    years_using: Number,
+    years_using: String,
     motivation_to_start: String,
     biggest_issue: String,
     collisions: String,
@@ -38,7 +43,7 @@ const CyclistProfileSchema = new mongoose.Schema({
     neighborhood_origin: String,
     neighborhood_destiny: String,
     wage: Number,
-    wage_standard: Number,
+    wage_standard: String,
   },
 });
 
