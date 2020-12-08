@@ -1,3 +1,3 @@
 export default {
-  helloWorld: "Hello V2X",
+  helloWorld: "Hello World",
 };

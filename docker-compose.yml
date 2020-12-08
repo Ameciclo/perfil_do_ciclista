@@ -1,13 +1,11 @@
 version: '3'
 services:
-
-  postgres:
-    image: "postgres:13"
+  mongo:
+    image: mongo
     restart: always
     ports:
-      - "5432:5432"
+      - "27017:27017"
     environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: test
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: test
 

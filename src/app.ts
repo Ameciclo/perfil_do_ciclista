@@ -8,6 +8,9 @@ import { createConnection } from "typeorm";
 import { Logger, ILogger } from "./utils";
 import nodeErrorHandler from "./middlewares/nodeErrorHandler";
 import config from "./config/config";
+import notFoundError from "./middlewares/notFoundHandler";
+import mongoose from "mongoose";
+import genericErrorHandler from "./middlewares/genericErrorHandler";
 
 export class Application {
   app: express.Application;
@@ -29,17 +32,25 @@ export class Application {
     );
     this.app.disable("x-powered-by");
     this.app.use("/perfil/v1", routes);
-    this.app.get("*", function (req, res) {
-      res.status(404).json({ message: "Not found" });
-    });
+    this.app.use(genericErrorHandler);
+    this.app.use(notFoundError);
   }
 
   setupDbAndServer = async () => {
-    const conn = await createConnection();
-    this.logger.info(
-      `Connected to database. Connection: ${conn.name} / ${conn.options.database}`
-    );
-    await this.startServer();
+    try {
+      const url = `mongodb://${this.config.db.username}:${this.config.db.password}@${this.config.db.host}:${this.config.db.port}/${this.config.db.database}?authSource=admin`;
+      const conn = await mongoose.connect(url, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+      });
+      this.logger.info(
+        `Connected to database. Connection: ${conn.connection.host} / ${conn.connection.name}`
+      );
+      await this.startServer();
+    } catch (e) {
+      this.logger.error(`Database error: ${e}`);
+    }
   };
 
   startServer(): Promise<boolean> {

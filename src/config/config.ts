@@ -10,7 +10,7 @@ const isTestEnvironment = process.env.NODE_ENV === "test";
 export default {
   errors,
   messages,
-  name: "V2X Core",
+  name: "Perfil do Ciclista",
   version: "1.0",
   host: process.env.APP_HOST || "127.0.0.1",
   environment: process.env.NODE_ENV || "development",
