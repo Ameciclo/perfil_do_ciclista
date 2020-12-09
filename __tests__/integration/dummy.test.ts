@@ -8,12 +8,12 @@ export let app: express.Application; // express app// express app
 describe("GET /perfil/v1/", () => {
   beforeAll(async () => {
     application = await new Application();
-    await application.setupDbAndServer();
     app = application.app;
   });
 
-  it("should GET /perfil/v1/ route and return 200", async () => {
-    const res = await request(app).get("perfil/v1/");
+  it("should GET /perfil/v1/ route and return 200", async (done) => {
+    const res = await request(app).get("/perfil/v1/");
     expect(res.status).toBe(200);
+    done();
   });
 });

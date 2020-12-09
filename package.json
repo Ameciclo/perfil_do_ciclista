@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --testTimeout=1000000 --detectOpenHandles",
+    "test": "NODE_ENV=test jest",
     "start": "ts-node dist/server.js",
     "dev": "NODE_ENV=development npx nodemon src/server.ts",
     "db:seed:profile": "npm seeds/profileSeeds.ts",
