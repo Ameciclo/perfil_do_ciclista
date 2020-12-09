@@ -1,5 +1,29 @@
 version: '3.8'
+
+volumes:
+  perfil_mongo_data:
+
 services:
+  perfil:
+    container_name: "perfil_api"
+    restart: always
+    build: .
+    image: ameciclo/perfil_do_ciclista
+    environment:
+      APP_PORT: 8000
+      APP_HOST: 0.0.0.0
+      DB_NAME: dev
+      DB_HOST: mongo
+      DB_PORT: 27017
+      DB_USERNAME: test
+      DB_PASSWORD: test
+      NODE_ENV: development
+    ports:
+      - "8000:8000"
+    links:
+      - mongo
+    volumes:
+      - ./logs:/app/logs
   mongo:
     container_name: mongoDB
     image: mongo
@@ -9,4 +33,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: test
       MONGO_INITDB_ROOT_PASSWORD: test
+    volumes:
+      - perfil_mongo_data:/data/db
 
