@@ -1,6 +1,7 @@
 import { ILogger, Logger } from "../utils";
 import { Document, Model } from "mongoose";
 import CyclistProfile from "../schemas/CyclistProfile";
+import * as QueryString from "querystring";
 
 export class CyclistProfileService {
   logger: ILogger;
@@ -18,6 +19,13 @@ export class CyclistProfileService {
 
   async getAll() {
     return this.model.find();
+  }
+
+  // Possible filters
+  // ?area&year&gender&race&income&age&schooling
+  async getFiltered(q: any) {
+    console.log(q.area);
+    return this.model.find({ "metadata.area": q.area });
   }
 
   async getById(id: string | number) {

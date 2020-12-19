@@ -10,10 +10,15 @@ const cyclistProfileRouter: Router = Router();
 cyclistProfileRouter
   .route("/")
   .get(async (req: Request, res: Response, next: NextFunction) => {
-    const cyclistProfileService = new CyclistProfileService();
-
+    const cyclistProfileService = new CyclistProfileService(),
+      q = req.query;
     try {
-      const response = await cyclistProfileService.getAll();
+      let response;
+      if (q) {
+        response = await cyclistProfileService.getFiltered(q);
+      } else {
+        response = await cyclistProfileService.getAll();
+      }
       // return 200 even if no user found. Empty array. Not an error
       res.status(200).json({
         success: true,
