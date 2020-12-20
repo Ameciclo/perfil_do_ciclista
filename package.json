@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles --coverage",
-    "start": "ts-node dist/server.js",
+    "start": "node dist/server.js",
+    "seed": "ts-node src/seed/profile-seeder.ts",
     "dev": "NODE_ENV=development npx nodemon -L src/server.ts",
     "build": "tsc -p ."
   },
