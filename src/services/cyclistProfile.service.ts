@@ -1,7 +1,10 @@
 import { ILogger, Logger } from "../utils";
 import { Document, Model } from "mongoose";
 import CyclistProfile from "../schemas/CyclistProfile";
-import * as QueryString from "querystring";
+import { MongooseQueryParser } from "mongoose-query-parser";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import aqp from "api-query-params";
 
 export class CyclistProfileService {
   logger: ILogger;
@@ -24,8 +27,10 @@ export class CyclistProfileService {
   // Possible filters
   // ?area&year&gender&race&income&age&schooling
   async getFiltered(q: any) {
-    console.log(q.area);
-    return this.model.find({ "metadata.area": q.area });
+    const query = aqp("metadata.city=Recife&data.gender!=Outro");
+    console.log(query.filter);
+
+    return this.model.find(query.filter);
   }
 
   async getById(id: string | number) {

@@ -28,20 +28,19 @@ const populate = async () => {
   if (process.env.NODE_ENV !== "production") {
     console.info("🌱 Seeding database...");
     await mongoose.connection.db.dropDatabase();
-    const profileOps: any[] = [];
+    const profileOps: Array<Promise<any>> = [];
     console.time("Seeding Time"); // Benchmarking the seed process.
     seedData.forEach((s: any) => {
       profileOps.push(saveProfileAsync(s));
     });
-    Promise.all(profileOps).then(function () {
-      mongoose.connection.close();
-    });
+    await Promise.all(profileOps);
+    await mongoose.connection.close();
     console.timeEnd("Seeding Time");
   }
 };
 
 const saveProfileAsync = (profile: any) => {
-  return new Promise<void>(function (resolve, reject) {
+  return new Promise<void>((resolve, reject) => {
     new CyclistProfile(profile).save(function (err) {
       if (err) reject(err);
       else resolve();
