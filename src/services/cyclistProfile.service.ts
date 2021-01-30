@@ -24,12 +24,8 @@ export class CyclistProfileService {
     return this.model.find();
   }
 
-  // Possible filters
-  // ?area&year&gender&race&income&age&schooling
   async getFiltered(q: any) {
-    const query = aqp("metadata.city=Recife&data.gender!=Outro");
-    console.log(query.filter);
-
+    const query = aqp(q);
     return this.model.find(query.filter);
   }
 
