@@ -1,6 +1,10 @@
 import { ILogger, Logger } from "../utils";
 import { Document, Model } from "mongoose";
 import CyclistProfile from "../schemas/CyclistProfile";
+import { MongooseQueryParser } from "mongoose-query-parser";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import aqp from "api-query-params";
 
 export class CyclistProfileService {
   logger: ILogger;
@@ -18,6 +22,11 @@ export class CyclistProfileService {
 
   async getAll() {
     return this.model.find();
+  }
+
+  async getFiltered(q: any) {
+    const query = aqp(q);
+    return this.model.find(query.filter);
   }
 
   async getById(id: string | number) {

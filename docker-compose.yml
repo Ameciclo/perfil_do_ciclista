@@ -3,12 +3,19 @@ version: '3.8'
 volumes:
   perfil_mongo_data:
 
+networks:
+  internal:
+    external: false
+
 services:
   perfil:
     container_name: "perfil_api"
     restart: always
     build: .
     image: ameciclo/perfil_do_ciclista
+    command: ["npm", "run", "dev"]
+    volumes:
+      - .:/app
     environment:
       APP_PORT: 8000
       APP_HOST: 0.0.0.0
@@ -20,14 +27,16 @@ services:
       NODE_ENV: development
     ports:
       - "8000:8000"
+    networks:
+      - internal
     links:
       - mongo
-    volumes:
-      - ./logs:/app/logs
   mongo:
     container_name: mongoDB
     image: mongo
     restart: always
+    networks:
+      - internal
     ports:
       - "27017:27017"
     environment:
