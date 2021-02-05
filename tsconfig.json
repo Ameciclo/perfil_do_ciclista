@@ -9,6 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-    "sourceMap": true
+    "sourceMap": true,
+    "resolveJsonModule": true
   }
 }

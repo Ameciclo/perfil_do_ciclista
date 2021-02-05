@@ -7,7 +7,7 @@
     "test": "jest --detectOpenHandles --coverage",
     "start": "ts-node dist/server.js",
     "dev": "NODE_ENV=development npx nodemon src/server.ts",
-    "db:seed:profile": "npm seeds/profileSeeds.ts",
+    "db:seed:profile": "ts-node src/seed/profile-seeder.ts",
     "build": "tsc -p ."
   },
   "keywords": [],
