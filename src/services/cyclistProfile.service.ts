@@ -23,6 +23,62 @@ export class CyclistProfileService {
     return this.model.find();
   }
 
+  async fetchDashboardData(q: any) {
+    const filters = [
+        { key: "gender", value: "Masculino" },
+        { key: "gender", value: "Feminino" },
+        { key: "color_race", value: "Branca" },
+      ],
+      columns = [
+        { key: "day", value: "days_usage.total" },
+        { key: "years_using", value: "years_using" },
+      ],
+      $or = filters.map((f) => {
+        return { [`data.${f.key}`]: f.value };
+      });
+
+    const promises = columns.map(async (c) => {
+      const _id: any = { [c.key]: `$data.${c.value}` },
+        $project: any = { [c.key]: `$_id.${c.key}`, total: "$total", _id: 0 };
+
+      filters.forEach((f) => {
+        _id[f.key] = `$data.${f.key}`;
+
+        $project[f.key] = `$_id.${f.key}`;
+      });
+
+      return this.model.aggregate([
+        {
+          $match: {
+            $or,
+          },
+        },
+        {
+          $group: {
+            _id,
+            total: {
+              $sum: 1,
+            },
+          },
+        },
+        {
+          $project,
+        },
+        {
+          $sort: { [c.key]: 1 },
+        },
+      ]);
+    });
+
+    const [dayAggregate, yearAggregate] = await Promise.all(promises).then(
+      (r) => {
+        return r;
+      }
+    );
+
+    return { dayAggregate, yearAggregate };
+  }
+
   async getFiltered(q: any) {
     const query = aqp(q);
     return this.model.find(query.filter);

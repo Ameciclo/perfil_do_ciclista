@@ -24,7 +24,6 @@ const seed = async () => {
 };
 
 const populate = async () => {
-  /* This route will populate a local MongoDB database */
   if (process.env.NODE_ENV !== "production") {
     console.info("🌱 Seeding database...");
     await mongoose.connection.db.dropDatabase();

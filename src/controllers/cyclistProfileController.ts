@@ -33,6 +33,31 @@ cyclistProfileRouter
     }
   });
 
+cyclistProfileRouter
+  .route("/summary/")
+  .get(async (req: Request, res: Response, next: NextFunction) => {
+    const cyclistProfileService = new CyclistProfileService(),
+      q = req.query;
+    try {
+      let response;
+      if (q) {
+        response = await cyclistProfileService.fetchDashboardData(q);
+      } else {
+        response = await cyclistProfileService.getAll();
+      }
+      res.status(200).json({
+        success: true,
+        data: response,
+      });
+    } catch (err) {
+      const error: ApiResponseError = {
+        code: 400,
+        errorObj: err,
+      };
+      next(error);
+    }
+  });
+
 // /cyclistProfile/:id
 cyclistProfileRouter
   .route("/:id")
