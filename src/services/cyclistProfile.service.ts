@@ -23,58 +23,65 @@ export class CyclistProfileService {
     return this.model.find();
   }
 
-  async fetchDashboardData(q: any) {
+  async fetchDashboardData(q: any): Promise<Record<any, any>> {
     const filters = [
         { key: "gender", value: "Masculino" },
         { key: "gender", value: "Feminino" },
         { key: "color_race", value: "Branca" },
       ],
+      groupedFilters = filters.reduce(
+        (f: any, a: { key: string; value: string }) => {
+          f[a.key] = f[a.key] || [];
+          f[a.key].push(a);
+          return f;
+        },
+        {}
+      ),
       columns = [
         { key: "day", value: "days_usage.total" },
         { key: "years_using", value: "years_using" },
-      ],
-      $or = filters.map((f) => {
-        return { [`data.${f.key}`]: f.value };
-      });
+      ];
 
     const promises = columns.map(async (c) => {
-      const _id: any = { [c.key]: `$data.${c.value}` },
-        $project: any = { [c.key]: `$_id.${c.key}`, total: "$total", _id: 0 };
-
-      filters.forEach((f) => {
-        _id[f.key] = `$data.${f.key}`;
-
-        $project[f.key] = `$_id.${f.key}`;
-      });
-
-      return this.model.aggregate([
-        {
-          $match: {
-            $or,
-          },
-        },
-        {
-          $group: {
-            _id,
-            total: {
-              $sum: 1,
+      return await Promise.all(
+        Object.keys(groupedFilters).map((k) => {
+          const _id: any = { [c.key]: `$data.${c.value}` },
+            $project: any = {
+              [c.key]: `$_id.${c.key}`,
+              total: "$total",
+              _id: 0,
+            };
+          const $or = groupedFilters[k].map((f: { key: any; value: any }) => {
+            _id[f.key] = `$data.${f.key}`;
+            $project[f.key] = `$_id.${f.key}`;
+            return { [`data.${f.key}`]: f.value };
+          });
+          return this.model.aggregate([
+            {
+              $match: {
+                $or,
+              },
             },
-          },
-        },
-        {
-          $project,
-        },
-        {
-          $sort: { [c.key]: 1 },
-        },
-      ]);
+            {
+              $group: {
+                _id,
+                total: {
+                  $sum: 1,
+                },
+              },
+            },
+            {
+              $project,
+            },
+            {
+              $sort: { [c.key]: 1 },
+            },
+          ]);
+        })
+      );
     });
 
-    const [dayAggregate, yearAggregate] = await Promise.all(promises).then(
-      (r) => {
-        return r;
-      }
-    );
+    const [dayAggregate, yearAggregate] = await Promise.all(promises);
 
     return { dayAggregate, yearAggregate };
   }
