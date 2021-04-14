@@ -36,15 +36,27 @@ cyclistProfileRouter
 cyclistProfileRouter
   .route("/summary/")
   .get(async (req: Request, res: Response, next: NextFunction) => {
-    const cyclistProfileService = new CyclistProfileService(),
-      q = req.query;
+    const cyclistProfileService = new CyclistProfileService();
     try {
-      let response;
-      if (q) {
-        response = await cyclistProfileService.fetchDashboardData(q);
-      } else {
-        response = await cyclistProfileService.getAll();
-      }
+      const response = await cyclistProfileService.getAll();
+
+      res.status(200).json({
+        success: true,
+        data: response,
+      });
+    } catch (err) {
+      const error: ApiResponseError = {
+        code: 400,
+        errorObj: err,
+      };
+      next(error);
+    }
+  })
+  .post(async (req: Request, res: Response, next: NextFunction) => {
+    const cyclistProfileService = new CyclistProfileService();
+    try {
+      const response = await cyclistProfileService.fetchDashboardData(req.body);
+
       res.status(200).json({
         success: true,
         data: response,

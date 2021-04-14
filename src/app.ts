@@ -42,6 +42,7 @@ export class Application {
         useCreateIndex: true,
         useUnifiedTopology: true,
       });
+      mongoose.set("debug", true);
       this.logger.info(
         `Connected to database. Connection: ${conn.connection.host} / ${conn.connection.name}`
       );

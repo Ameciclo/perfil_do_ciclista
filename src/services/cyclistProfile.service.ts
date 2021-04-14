@@ -23,13 +23,8 @@ export class CyclistProfileService {
     return this.model.find();
   }
 
-  async fetchDashboardData(q: any): Promise<Record<any, any>> {
-    const filters = [
-        { key: "gender", value: "Masculino" },
-        { key: "gender", value: "Feminino" },
-        { key: "color_race", value: "Branca" },
-      ],
-      groupedFilters = filters.reduce(
+  async fetchDashboardData(filters: any[]): Promise<Record<any, any>> {
+    const groupedFilters = filters.reduce(
         (f: any, a: { key: string; value: string }) => {
           f[a.key] = f[a.key] || [];
           f[a.key].push(a);
@@ -83,94 +78,66 @@ export class CyclistProfileService {
 
     let [dayAggregate, yearAggregate] = await Promise.all(promises);
 
-    // filters =
-    // [
-    //   { key: "gender", value: "Masculino" },
-    //   { key: "gender", value: "Feminino" },
-    //   { key: "color_race", value: "Branca" },
-    // ]
-
-    // var groupBy = function(xs: any[], key: string | number) {
-    //   return xs.reduce(function(rv: { [x: string]: never[]; }, x: { [x: string]: string | number; }) {
-    //     (rv[x[key]] = rv[x[key]] || []).push(x);
-    //     return rv;
-    //   }, {});
-    // };
-    
-    // const keys = groupBy(filters, 'key');
-    // console.log(keys);
-
     const groupBy = (array: any[], key: string) => {
       return array.reduce((result, currentValue) => {
         (result[currentValue[key]] = result[currentValue[key]] || []).push(
           currentValue
         );
         return result;
-      }, {}); 
+      }, {});
     };
 
     // Prefer to use method to remove duplicated rather than use Sets
-    let keys = Array.from(new Set(filters.map((f) => f["key"])))
-    let values = Array.from(new Set(filters.map((f) => f["value"])))
+    const keys = Array.from(new Set(filters.map((f) => f["key"])));
+    const values = Array.from(new Set(filters.map((f) => f["value"])));
 
-
-    // 2[0,1]
-    // groupBy(el, )
-
-    let series: { name: string; data: any[]; }[] = []
-
+    const series: { name: string; data: any[] }[] = [];
+    const yearSeries: { name: string; data: any[] }[] = [];
 
     dayAggregate = dayAggregate.map((el, i: number) => {
-      console.log(i)
-
       const grouped = groupBy(el, keys[i]);
-      values.forEach(value => {
+      values.forEach((value) => {
         const valueFromKey = grouped[value];
-        let result: any[] = [];
+        const result: any[] = [];
 
         if (valueFromKey !== undefined) {
-        valueFromKey.forEach((item: any) => {
-          result.push(item.total);
-        })
+          valueFromKey.forEach((item: any) => {
+            result.push(item.total);
+          });
 
-        const test = {
-          name: value,
-          data: result
-        }        
-        series.push(test);
-      }
-
-        // Masculino: [
-        // { day: 1, value 2}
-        // { day: 1, value 2}
-        // { day: 1, value 2 }  
-        // ]
-        //
-      })
+          const test = {
+            name: value,
+            data: result,
+          };
+          series.push(test);
+        }
+      });
       return series;
     });
-    
-  
 
+    yearAggregate = yearAggregate.map((el, i: number) => {
+      const grouped = groupBy(el, keys[i]);
+      values.forEach((value) => {
+        const valueFromKey = grouped[value];
+        const result: any[] = [];
 
-    
-    // series: [{
-    //   name: "Masculino",
-    //   data: [1, 2, 3]
-    // },
-    // {
-    //   name: "Feminino",
-    //   data: [1, 2, 3]
-    // },
-    //
-    // {
-    //   name: "Branco",
-    //   data: [3, 5, 1]
-    // }]
-    
-    return { dayAggregate: dayAggregate[0], yearAggregate };
+        if (valueFromKey !== undefined) {
+          valueFromKey.forEach((item: any) => {
+            result.push(item.total);
+          });
+
+          const test = {
+            name: value,
+            data: result,
+          };
+          yearSeries.push(test);
+        }
+      });
+      return yearSeries;
+    });
+
+    return { dayAggregate: dayAggregate[0], yearAggregate: yearAggregate[0] };
   }
-  
 
   async getFiltered(q: any) {
     const query = aqp(q);
