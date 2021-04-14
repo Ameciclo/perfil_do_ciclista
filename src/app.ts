@@ -29,7 +29,7 @@ export class Application {
       })
     );
     this.app.disable("x-powered-by");
-    this.app.use("/perfil/v1", routes);
+    this.app.use("/v1", routes);
     this.app.use(genericErrorHandler);
     this.app.use(notFoundError);
   }
@@ -42,6 +42,7 @@ export class Application {
         useCreateIndex: true,
         useUnifiedTopology: true,
       });
+      mongoose.set("debug", true);
       this.logger.info(
         `Connected to database. Connection: ${conn.connection.host} / ${conn.connection.name}`
       );
