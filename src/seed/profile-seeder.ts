@@ -24,18 +24,16 @@ const seed = async () => {
 };
 
 const populate = async () => {
-  if (process.env.NODE_ENV !== "production") {
-    console.info("🌱 Seeding database...");
-    await mongoose.connection.db.dropDatabase();
-    const profileOps: Array<Promise<any>> = [];
-    console.time("Seeding Time"); // Benchmarking the seed process.
-    seedData.forEach((s: any) => {
-      profileOps.push(saveProfileAsync(s));
-    });
-    await Promise.all(profileOps);
-    await mongoose.connection.close();
-    console.timeEnd("Seeding Time");
-  }
+  console.info("🌱 Seeding database...");
+  await mongoose.connection.db.dropDatabase();
+  const profileOps: Array<Promise<any>> = [];
+  console.time("Seeding Time"); // Benchmarking the seed process.
+  seedData.forEach((s: any) => {
+    profileOps.push(saveProfileAsync(s));
+  });
+  await Promise.all(profileOps);
+  await mongoose.connection.close();
+  console.timeEnd("Seeding Time");
 };
 
 const saveProfileAsync = (profile: any) => {
