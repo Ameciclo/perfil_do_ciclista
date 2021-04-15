@@ -11,9 +11,9 @@ services:
   perfil:
     container_name: "perfil_api"
     restart: always
-    build: .
     image: ameciclo/perfil_do_ciclista
-    command: ["npm", "run", "dev"]
+    build: .
+    command: [ "npm", "run", "dev" ]
     volumes:
       - .:/app
     environment:
@@ -27,6 +27,21 @@ services:
       NODE_ENV: development
     ports:
       - "8000:8000"
+    networks:
+      - internal
+    links:
+      - mongo
+  seeder:
+    container_name: "perfil_seeder"
+    image: ameciclo/perfil_do_ciclista
+    command: [ "node", "dist/seed/profile-seeder.js"]
+    environment:
+      DB_NAME: dev
+      DB_HOST: mongo
+      DB_PORT: 27017
+      DB_USERNAME: test
+      DB_PASSWORD: test
+      NODE_ENV: production
     networks:
       - internal
     links:
