@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test jest --detectOpenHandles --forceExit",
     "start": "ts-node dist/server.js",
-    "db:seed:profile": "npm seeds/profileSeeds.ts",
+    "seed": "ts-node src/seed/profile-seeder.ts",
     "dev": "NODE_ENV=development npx nodemon src/server.ts",
     "build": "tsc -p ."
   },
