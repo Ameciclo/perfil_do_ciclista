@@ -11,5 +11,7 @@
     "strictPropertyInitialization": false,
     "sourceMap": true,
     "resolveJsonModule": true
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "logs", "__tests__", "jest.config.ts"]
 }
