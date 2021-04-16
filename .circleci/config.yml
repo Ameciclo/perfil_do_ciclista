@@ -22,9 +22,9 @@ workflows:
 
 jobs:
   checkout:
+    working_directory: ~/perfil_do_ciclista
     docker:
       - image: node:15.14.0
-    working_directory: ~/perfil_do_ciclista
     steps:
       - checkout
       - restore_cache:
@@ -36,11 +36,12 @@ jobs:
           paths:
             - node_modules
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths: 
-            - /*
+            - perfil_do_ciclista
 
   lint:
+    working_directory: ~/perfil_do_ciclista
     docker:
       - image: node:15.14.0
     steps:
@@ -66,7 +67,7 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: test
     steps:
       - attach_workspace:
-          at: /tmp/perfil_do_ciclista
+          at: perfil_do_ciclista
       - run:
           name: Run tests
           command: 'npm run test:ci'
