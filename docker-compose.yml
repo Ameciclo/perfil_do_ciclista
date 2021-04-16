@@ -1,12 +1,62 @@
 version: '3.8'
+
+volumes:
+  perfil_mongo_data:
+
+networks:
+  internal:
+    external: false
+
 services:
+  perfil:
+    container_name: "perfil_api"
+    restart: always
+    image: ameciclo/perfil_do_ciclista
+    build: .
+    command: [ "npm", "run", "dev" ]
+    volumes:
+      - .:/app
+    environment:
+      APP_PORT: 8000
+      APP_HOST: 0.0.0.0
+      DB_NAME: dev
+      DB_HOST: mongo
+      DB_PORT: 27017
+      DB_USERNAME: test
+      DB_PASSWORD: test
+      NODE_ENV: development
+    ports:
+      - "8000:8000"
+    networks:
+      - internal
+    links:
+      - mongo
+  seeder:
+    container_name: "perfil_seeder"
+    image: ameciclo/perfil_do_ciclista
+    command: [ "node", "dist/seed/profile-seeder.js"]
+    environment:
+      DB_NAME: dev
+      DB_HOST: mongo
+      DB_PORT: 27017
+      DB_USERNAME: test
+      DB_PASSWORD: test
+      NODE_ENV: production
+    networks:
+      - internal
+    links:
+      - mongo
   mongo:
     container_name: mongoDB
     image: mongo
     restart: always
+    networks:
+      - internal
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: test
       MONGO_INITDB_ROOT_PASSWORD: test
+    volumes:
+      - perfil_mongo_data:/data/db
 
