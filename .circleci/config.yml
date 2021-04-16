@@ -41,6 +41,7 @@ jobs:
             - .
 
   lint:
+    working_directory: ~/perfil_do_ciclista
     docker:
       - image: node:15.14.0
     steps:
@@ -49,6 +50,7 @@ jobs:
           command: 'npm run lint'
 
   test:
+    working_directory: ~/perfil_do_ciclista
     docker:
       - image: node:15.14.0
         environment:
