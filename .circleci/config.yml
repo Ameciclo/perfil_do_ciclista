@@ -2,15 +2,42 @@ version: 2.1
 orbs:
   node: circleci/node@4.2.1
 workflows:
-  node-tests:
+  build_and_test:
     jobs:
+      - checkout
+      - lint:
+          requires:
+            - checkout
+      - test:
+          requires:
+            - checkout
       - build:
+          requires:
+            - checkout
+            - lint
+            - test
           filters:
             branches:
               only: master
 
 jobs:
-  build:
+  checkout:
+    docker:
+      - image: node:15.14.0
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+
+  lint:
+    docker:
+      - image: node:15.14.0
+    steps:
+      - run:
+          name: Run linter
+          command: 'npm run lint'
+
+  test:
     docker:
       - image: node:15.14.0
         environment:
@@ -26,9 +53,6 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: test
     working_directory: ~/perfil_do_ciclista
     steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
       - run:
           name: Run tests
           command: 'npm run test:ci'
@@ -38,3 +62,11 @@ jobs:
           path: ./reports/junit/
       - store_artifacts:
           path: ./reports/junit
+
+  build:
+    docker:
+      - image: node:15.14.0
+    steps:
+      - run:
+          name: Run build
+          command: 'npm run build'

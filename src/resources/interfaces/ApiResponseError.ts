@@ -1,5 +1,5 @@
 export interface ApiResponseError {
   code: number;
-  errorObj?: string | object;
+  errorObj?: string | Record<string, unknown>;
   errorsArray?: any[];
 }

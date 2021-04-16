@@ -9,6 +9,7 @@
     "start": "ts-node dist/server.js",
     "seed": "NODE_ENV=test ts-node src/seed/profile-seeder.ts",
     "dev": "NODE_ENV=development npx nodemon src/server.ts",
+    "lint": "npx eslint src",
     "build": "tsc -p ."
   },
   "keywords": [],
