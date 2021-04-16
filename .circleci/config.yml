@@ -37,7 +37,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths: 
-            - project/
+            - project
 
   lint:
     docker:
