@@ -38,7 +38,7 @@ jobs:
       - persist_to_workspace:
           root: ~/perfil_do_ciclista
           paths:
-            - /
+            - .
 
   lint:
     docker:
