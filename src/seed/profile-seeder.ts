@@ -1,5 +1,5 @@
 import CyclistProfile from "../schemas/CyclistProfile";
-import mongoose from "mongoose";
+import mongoose, { CallbackError } from "mongoose";
 import config from "../config/config";
 import seedData from "./seed.json";
 
@@ -38,7 +38,7 @@ const populate = async () => {
 
 const saveProfileAsync = (profile: any) => {
   return new Promise<void>((resolve, reject) => {
-    new CyclistProfile(profile).save(function (err) {
+    new CyclistProfile(profile).save(function (err: CallbackError) {
       if (err) reject(err);
       else resolve();
     });
