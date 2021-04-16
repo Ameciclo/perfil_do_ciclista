@@ -42,10 +42,14 @@ export class Application {
         useCreateIndex: true,
         useUnifiedTopology: true,
       });
-      mongoose.set("debug", true);
-      this.logger.info(
-        `Connected to database. Connection: ${conn.connection.host} / ${conn.connection.name}`
-      );
+      if (process.env.NODE_ENV === "development") {
+        mongoose.set("debug", true);
+      }
+      if (process.env.NODE_ENV !== "test") {
+        this.logger.info(
+          `Connected to database. Connection: ${conn.connection.host} / ${conn.connection.name}`
+        );
+      }
       await this.startServer();
     } catch (e) {
       this.logger.error(`Database error: ${e}`);
@@ -56,9 +60,12 @@ export class Application {
     return new Promise((resolve, reject) => {
       this.app
         .listen(+this.config.port, this.config.host, () => {
-          this.logger.info(
-            `Server started at http://${this.config.host}:${this.config.port}`
-          );
+          if (process.env.NODE_ENV !== "test") {
+            this.logger.info(
+              `Server started at http://${this.config.host}:${this.config.port}`
+            );
+          }
+
           resolve(true);
         })
         .on("error", nodeErrorHandler);
