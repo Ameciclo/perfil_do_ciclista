@@ -22,3 +22,6 @@ jobs:
       - run:
           name: Seed database
           command: npm run db:seed:profile
+      - run:
+          name: Run tests
+          command: npm test
