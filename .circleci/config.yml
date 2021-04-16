@@ -4,10 +4,13 @@ orbs:
 workflows:
   node-tests:
     jobs:
-      - test
+      - build:
+          filters:
+            branches:
+              only: master
 
 jobs:
-  test:
+  build:
     docker:
       - image: node:15.14.0
         environment:
