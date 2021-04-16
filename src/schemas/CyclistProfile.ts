@@ -5,10 +5,16 @@ const CyclistProfileSchema = new mongoose.Schema({
     sheet_index: Number,
     city: String,
     area: String,
-    timestamp: Date,
     location: {
-      latitude: Number,
-      longitude: Number,
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: true,
+      },
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
     neighborhood: String,
     researcher_code: Number,
@@ -42,7 +48,6 @@ const CyclistProfileSchema = new mongoose.Schema({
     color_race: String,
     neighborhood_origin: String,
     neighborhood_destiny: String,
-    wage: Number,
     wage_standard: String,
   },
 });
