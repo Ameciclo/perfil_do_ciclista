@@ -35,6 +35,7 @@ jobs:
     docker:
       - image: node:15.14.0
     steps:
+      - checkout
       - run:
           name: Run linter
           command: 'npm run lint'
@@ -56,6 +57,7 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: test
     steps:
       - run:
+          - checkout
           name: Run tests
           command: 'npm run test:ci'
           environment:
