@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@3.0.0
+  node: circleci/node@4.2.1
 workflows:
   node-tests:
     jobs:
@@ -13,12 +13,11 @@ jobs:
       - image: mongo:4.2.0
     steps:
       - checkout
-      - run:
-          name: Install npm dependencies
-          command: 'npm ci'
+      - node/install-packages:
+          pkg-manager: npm
       - run:
           name: Seed database
-          command: 'npm run db:seed:profile'
+          command: npm run db:seed:profile
       - run:
           name: Run tests
-          command: 'npm test'
+          command: npm test
