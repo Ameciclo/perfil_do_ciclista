@@ -4,10 +4,10 @@ orbs:
 workflows:
   node-tests:
     jobs:
-      - node/test
+      - test
 
 jobs:
-  node/test:
+  test:
     docker:
       - image: node:15.14.0
       - image: mongo:4.2.0
@@ -21,7 +21,7 @@ jobs:
           pkg-manager: npm
       - run:
           name: Seed database
-          command: npm run db:seed:profile
+          command: 'npm run db:seed:profile'
       - run:
           name: Run tests
-          command: npm test
+          command: 'npm test'
