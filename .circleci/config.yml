@@ -36,9 +36,9 @@ jobs:
           paths:
             - node_modules
       - persist_to_workspace:
-          root: ~/
+          root: ~/perfil_do_ciclista
           paths: 
-            - perfil_do_ciclista
+            - .
 
   lint:
     working_directory: ~/perfil_do_ciclista
@@ -52,6 +52,7 @@ jobs:
           command: 'npm run lint'
 
   test:
+    working_directory: ~/perfil_do_ciclista
     docker:
       - image: node:15.14.0
         environment:
@@ -67,7 +68,7 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: test
     steps:
       - attach_workspace:
-          at: perfil_do_ciclista
+          at: ~/perfil_do_ciclista
       - run:
           name: Run tests
           command: 'npm run test:ci'
