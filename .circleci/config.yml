@@ -9,7 +9,7 @@ workflows:
 jobs:
   node/test:
     docker:
-      - image: node:lts
+      - image: node:15.14.0
       - image: mongo:4.2.0
     steps:
       - checkout
