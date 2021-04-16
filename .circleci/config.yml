@@ -30,9 +30,6 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          name: Seed database
-          command: 'npm run seed:test'
-      - run:
           name: Run tests
           command: 'npm run test:ci'
           environment:

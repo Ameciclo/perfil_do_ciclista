@@ -8,7 +8,6 @@
     "test:ci": "NODE_ENV=test jest --ci --runInBand --reporters=default --reporters=jest-junit --detectOpenHandles --forceExit",
     "start": "ts-node dist/server.js",
     "seed": "NODE_ENV=test ts-node src/seed/profile-seeder.ts",
-    "seed:test": "NODE_ENV=test ts-node src/seed/profile-seeder.ts",
     "dev": "NODE_ENV=development npx nodemon src/server.ts",
     "build": "tsc -p ."
   },
