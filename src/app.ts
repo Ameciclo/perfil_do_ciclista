@@ -42,8 +42,10 @@ export class Application {
         useCreateIndex: true,
         useUnifiedTopology: true,
       });
+      if (process.env.NODE_ENV === "development") {
         mongoose.set("debug", true);
-        if (process.env.NODE_ENV !== "test") {
+      }
+      if (process.env.NODE_ENV !== "test") {
         this.logger.info(
           `Connected to database. Connection: ${conn.connection.host} / ${conn.connection.name}`
         );
