@@ -33,6 +33,8 @@ export default {
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: "v8",
 
+  // coverageReporters: ["default", "jest-junit"],
+
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
   //   "json",
@@ -100,6 +102,7 @@ export default {
 
   // Use this configuration option to add custom reporters to Jest
   // reporters: undefined,
+  reporters: ["default", "jest-junit"],
 
   // Automatically reset mock state between every test
   // resetMocks: false,
