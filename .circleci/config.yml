@@ -21,7 +21,7 @@ jobs:
           pkg-manager: npm
       - run:
           name: Seed database
-          command: 'npm run db:seed:profile'
+          command: 'npm run seed'
       - run:
           name: Run tests
           command: 'npm test'
