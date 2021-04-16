@@ -11,6 +11,10 @@ jobs:
     docker:
       - image: node:15.14.0
       - image: mongo:4.2.0
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: test
+          MONGO_INITDB_ROOT_PASSWORD: test
+    working_directory: ~/perfil_do_ciclista
     steps:
       - checkout
       - node/install-packages:
