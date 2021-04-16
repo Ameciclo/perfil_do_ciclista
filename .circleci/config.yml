@@ -15,10 +15,10 @@ jobs:
       - checkout
       - run:
           name: Install npm dependencies
-          command: 'npm install --save'
+          command: 'npm ci'
       - run:
           name: Seed database
           command: 'npm run db:seed:profile'
       - run:
           name: Run tests
-          command: npm test
+          command: 'npm test'
