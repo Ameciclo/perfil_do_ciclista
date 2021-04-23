@@ -41,7 +41,7 @@ const CyclistProfileSchema = new mongoose.Schema({
     age: Number,
     schooling: String,
     job: String,
-    distance_time: String,
+    distance_time: Number,
     gender: String,
     motivation_to_continue: String,
     biggest_need: String,

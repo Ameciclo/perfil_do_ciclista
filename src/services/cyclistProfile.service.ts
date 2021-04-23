@@ -36,6 +36,11 @@ export class CyclistProfileService {
         { key: "day", value: "days_usage.total" },
         { key: "years_using", value: "years_using" },
         { key: "biggest_need", value: "biggest_need" },
+        { key: "motivation_to_start", value: "motivation_to_start" },
+        { key: "motivation_to_continue", value: "motivation_to_continue" },
+        { key: "biggest_issue", value: "biggest_issue" },
+        { key: "distance_time", value: "distance_time" },
+        { key: "collisions", value: "collisions" },
       ];
 
     const promises = columns.map(async (c) => {
@@ -77,9 +82,16 @@ export class CyclistProfileService {
       );
     });
 
-    let [dayAggregate, yearAggregate, needAggregate] = await Promise.all(
-      promises
-    );
+    let [
+      dayAggregate,
+      yearAggregate,
+      needAggregate,
+      startAggregate,
+      continueAggregate,
+      issueAggregate,
+      distanceAggregate,
+      collisionAggregate,
+    ] = await Promise.all(promises);
 
     const groupBy = (array: any[], key: string) => {
       return array.reduce((result, currentValue) => {
@@ -97,6 +109,11 @@ export class CyclistProfileService {
     const series: { name: string; data: any[] }[] = [];
     const yearSeries: { name: string; data: any[] }[] = [];
     const needSeries: { name: string; data: any[] }[] = [];
+    const startSeries: { name: string; data: any[] }[] = [];
+    const continueSeries: { name: string; data: any[] }[] = [];
+    const issueSeries: { name: string; data: any[] }[] = [];
+    const distanceSeries: { name: string; data: any[] }[] = [];
+    const collisionSeries: { name: string; data: any[] }[] = [];
 
     dayAggregate = dayAggregate.map((el, i: number) => {
       const grouped = groupBy(el, keys[i]);
@@ -161,6 +178,111 @@ export class CyclistProfileService {
       return needSeries;
     });
 
+    startAggregate = startAggregate.map((el, i: number) => {
+      const grouped = groupBy(el, keys[i]);
+      values.forEach((value) => {
+        const valueFromKey = grouped[value];
+        const result: any[] = [];
+
+        if (valueFromKey !== undefined) {
+          valueFromKey.forEach((item: any) => {
+            result.push({ name: item.motivation_to_start, y: item.total });
+          });
+
+          const test = {
+            name: value,
+            data: result,
+          };
+          startSeries.push(test);
+        }
+      });
+      return startSeries;
+    });
+
+    continueAggregate = continueAggregate.map((el, i: number) => {
+      const grouped = groupBy(el, keys[i]);
+      values.forEach((value) => {
+        const valueFromKey = grouped[value];
+        const result: any[] = [];
+
+        if (valueFromKey !== undefined) {
+          valueFromKey.forEach((item: any) => {
+            result.push({ name: item.motivation_to_continue, y: item.total });
+          });
+
+          const test = {
+            name: value,
+            data: result,
+          };
+          continueSeries.push(test);
+        }
+      });
+      return continueSeries;
+    });
+
+    issueAggregate = issueAggregate.map((el, i: number) => {
+      const grouped = groupBy(el, keys[i]);
+      values.forEach((value) => {
+        const valueFromKey = grouped[value];
+        const result: any[] = [];
+
+        if (valueFromKey !== undefined) {
+          valueFromKey.forEach((item: any) => {
+            result.push({ name: item.biggest_issue, y: item.total });
+          });
+
+          const test = {
+            name: value,
+            data: result,
+          };
+          issueSeries.push(test);
+        }
+      });
+      return issueSeries;
+    });
+
+    distanceAggregate = distanceAggregate.map((el, i: number) => {
+      const grouped = groupBy(el, keys[i]);
+      values.forEach((value) => {
+        const valueFromKey = grouped[value];
+        const result: any[] = [];
+
+        if (valueFromKey !== undefined) {
+          valueFromKey.forEach((item: any) => {
+            result.push({ name: item.distance_time, y: item.total });
+          });
+
+          const test = {
+            name: value,
+            data: result,
+          };
+          distanceSeries.push(test);
+        }
+      });
+      return distanceSeries;
+    });
+
+    collisionAggregate = collisionAggregate.map((el, i: number) => {
+      const grouped = groupBy(el, keys[i]);
+      values.forEach((value) => {
+        const valueFromKey = grouped[value];
+        const result: any[] = [];
+
+        if (valueFromKey !== undefined) {
+          valueFromKey.forEach((item: any) => {
+            result.push({ name: item.collisions, y: item.total });
+          });
+
+          const test = {
+            name: value,
+            data: result,
+          };
+          collisionSeries.push(test);
+        }
+      });
+      return collisionSeries;
+    });
+
     const genderCount = await this.model.aggregate([
       {
         $group: {
@@ -187,6 +309,11 @@ export class CyclistProfileService {
       dayAggregate: dayAggregate[0],
       yearAggregate: yearAggregate[0],
       needAggregate: needAggregate[0],
+      startAggregate: startAggregate[0],
+      continueAggregate: continueAggregate[0],
+      issueAggregate: issueAggregate[0],
+      distanceAggregate: distanceAggregate[0],
+      collisionAggregate: collisionAggregate[0],
       genderCount: genderCount[0].counts,
     };
   }
