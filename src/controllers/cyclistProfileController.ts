@@ -19,7 +19,6 @@ cyclistProfileRouter
       } else {
         response = await cyclistProfileService.getAll();
       }
-      // return 200 even if no user found. Empty array. Not an error
       res.status(200).json({
         success: true,
         data: response,
