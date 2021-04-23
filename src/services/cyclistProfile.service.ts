@@ -106,7 +106,7 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push(item.total);
+            result.push({ name: item.day, y: item.total });
           });
 
           const test = {
@@ -127,7 +127,7 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push(item.total);
+            result.push({ name: item.years_using, y: item.total });
           });
 
           const test = {
@@ -140,8 +140,6 @@ export class CyclistProfileService {
       return yearSeries;
     });
 
-    console.log(needAggregate);
-
     needAggregate = needAggregate.map((el, i: number) => {
       const grouped = groupBy(el, keys[i]);
       values.forEach((value) => {
@@ -150,7 +148,7 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push(item.total);
+            result.push({ name: item.biggest_need, y: item.total });
           });
 
           const test = {
@@ -184,8 +182,6 @@ export class CyclistProfileService {
         },
       },
     ]);
-
-    console.log();
 
     return {
       dayAggregate: dayAggregate[0],
