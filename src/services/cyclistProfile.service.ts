@@ -136,7 +136,40 @@ export class CyclistProfileService {
       return yearSeries;
     });
 
-    return { dayAggregate: dayAggregate[0], yearAggregate: yearAggregate[0] };
+    const genderCount = await this.model.aggregate([
+      {
+        $group: {
+          _id: "$data.gender",
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          counts: {
+            $push: {
+              k: "$_id",
+              v: "$count",
+            },
+          },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $arrayToObject: "$counts",
+          },
+        },
+      },
+    ]);
+
+    return {
+      dayAggregate: dayAggregate[0],
+      yearAggregate: yearAggregate[0],
+      genderCount,
+    };
   }
 
   async getFiltered(q: any) {
