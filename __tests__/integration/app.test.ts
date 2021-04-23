@@ -133,6 +133,7 @@ describe("GET /v1/cyclist-profile", () => {
         expect(res.body).toHaveProperty("data.genderCount");
         expect(res.body.data.dayAggregate.length).toBeGreaterThanOrEqual(1);
         expect(res.body.data.yearAggregate.length).toBeGreaterThanOrEqual(1);
+        expect(res.body.data.genderCount.length).toBeGreaterThanOrEqual(1);
       });
     done();
   });

@@ -35,6 +35,7 @@ export class CyclistProfileService {
       columns = [
         { key: "day", value: "days_usage.total" },
         { key: "years_using", value: "years_using" },
+        { key: "biggest_need", value: "biggest_need" },
       ];
 
     const promises = columns.map(async (c) => {
@@ -76,7 +77,9 @@ export class CyclistProfileService {
       );
     });
 
-    let [dayAggregate, yearAggregate] = await Promise.all(promises);
+    let [dayAggregate, yearAggregate, needAggregate] = await Promise.all(
+      promises
+    );
 
     const groupBy = (array: any[], key: string) => {
       return array.reduce((result, currentValue) => {
@@ -93,6 +96,7 @@ export class CyclistProfileService {
 
     const series: { name: string; data: any[] }[] = [];
     const yearSeries: { name: string; data: any[] }[] = [];
+    const needSeries: { name: string; data: any[] }[] = [];
 
     dayAggregate = dayAggregate.map((el, i: number) => {
       const grouped = groupBy(el, keys[i]);
@@ -136,6 +140,29 @@ export class CyclistProfileService {
       return yearSeries;
     });
 
+    console.log(needAggregate);
+
+    needAggregate = needAggregate.map((el, i: number) => {
+      const grouped = groupBy(el, keys[i]);
+      values.forEach((value) => {
+        const valueFromKey = grouped[value];
+        const result: any[] = [];
+
+        if (valueFromKey !== undefined) {
+          valueFromKey.forEach((item: any) => {
+            result.push(item.total);
+          });
+
+          const test = {
+            name: value,
+            data: result,
+          };
+          needSeries.push(test);
+        }
+      });
+      return needSeries;
+    });
+
     const genderCount = await this.model.aggregate([
       {
         $group: {
@@ -147,28 +174,24 @@ export class CyclistProfileService {
       },
       {
         $group: {
-          _id: null,
+          _id: 0,
           counts: {
             $push: {
-              k: "$_id",
-              v: "$count",
+              name: "$_id",
+              y: "$count",
             },
-          },
-        },
-      },
-      {
-        $replaceRoot: {
-          newRoot: {
-            $arrayToObject: "$counts",
           },
         },
       },
     ]);
 
+    console.log();
+
     return {
       dayAggregate: dayAggregate[0],
       yearAggregate: yearAggregate[0],
-      genderCount,
+      needAggregate: needAggregate[0],
+      genderCount: genderCount[0].counts,
     };
   }
 
