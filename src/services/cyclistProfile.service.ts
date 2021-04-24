@@ -1,8 +1,6 @@
 import { ILogger, Logger } from "../utils";
 import { Document, Model } from "mongoose";
 import CyclistProfile from "../schemas/CyclistProfile";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import aqp from "api-query-params";
 
 export class CyclistProfileService {
@@ -39,7 +37,6 @@ export class CyclistProfileService {
         { key: "motivation_to_start", value: "motivation_to_start" },
         { key: "motivation_to_continue", value: "motivation_to_continue" },
         { key: "biggest_issue", value: "biggest_issue" },
-        { key: "distance_time", value: "distance_time" },
         { key: "collisions", value: "collisions" },
       ];
 
@@ -89,7 +86,6 @@ export class CyclistProfileService {
       startAggregate,
       continueAggregate,
       issueAggregate,
-      distanceAggregate,
       collisionAggregate,
     ] = await Promise.all(promises);
 
@@ -112,7 +108,6 @@ export class CyclistProfileService {
     const startSeries: { name: string; data: any[] }[] = [];
     const continueSeries: { name: string; data: any[] }[] = [];
     const issueSeries: { name: string; data: any[] }[] = [];
-    const distanceSeries: { name: string; data: any[] }[] = [];
     const collisionSeries: { name: string; data: any[] }[] = [];
 
     dayAggregate = dayAggregate.map((el, i: number) => {
@@ -241,27 +236,6 @@ export class CyclistProfileService {
       return issueSeries;
     });
 
-    distanceAggregate = distanceAggregate.map((el, i: number) => {
-      const grouped = groupBy(el, keys[i]);
-      values.forEach((value) => {
-        const valueFromKey = grouped[value];
-        const result: any[] = [];
-
-        if (valueFromKey !== undefined) {
-          valueFromKey.forEach((item: any) => {
-            result.push({ name: item.distance_time, y: item.total });
-          });
-
-          const test = {
-            name: value,
-            data: result,
-          };
-          distanceSeries.push(test);
-        }
-      });
-      return distanceSeries;
-    });
-
     collisionAggregate = collisionAggregate.map((el, i: number) => {
       const grouped = groupBy(el, keys[i]);
       values.forEach((value) => {
@@ -282,6 +256,15 @@ export class CyclistProfileService {
       });
       return collisionSeries;
     });
+
+    const distancesDocument = await this.model.find(
+      {},
+      { "data.distance_time": 1, _id: 0 }
+    );
+
+    const distances = distancesDocument
+      .filter((d) => d.get("data").distance_time !== null)
+      .map((d) => d.get("data").distance_time);
 
     const genderCount = await this.model.aggregate([
       {
@@ -312,8 +295,8 @@ export class CyclistProfileService {
       startAggregate: startAggregate[0],
       continueAggregate: continueAggregate[0],
       issueAggregate: issueAggregate[0],
-      distanceAggregate: distanceAggregate[0],
       collisionAggregate: collisionAggregate[0],
+      distances,
       genderCount: genderCount[0].counts,
     };
   }

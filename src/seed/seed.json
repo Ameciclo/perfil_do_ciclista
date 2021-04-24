@@ -16714,7 +16714,7 @@
         "total": 7,
         "working": 7
       },
-      "distance_time": "",
+      "distance_time": null,
       "gender": "Masculino",
       "job": "Entregador(a) De Água",
       "motivation_to_continue": "É mais barato",
@@ -20514,7 +20514,7 @@
         "total": 6,
         "working": 5
       },
-      "distance_time": "",
+      "distance_time": null,
       "gender": "Masculino",
       "job": "Pedreiro",
       "motivation_to_continue": "É mais rápido e prático",

@@ -1,4 +1,3 @@
-import request from "supertest";
 import { Application } from "../../src/app";
 import express from "express";
 import supertest from "supertest";
