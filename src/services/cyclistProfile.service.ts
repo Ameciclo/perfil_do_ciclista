@@ -22,6 +22,15 @@ export class CyclistProfileService {
   }
 
   async fetchDashboardData(filters: any[]): Promise<Record<any, any>> {
+    const countObj = {} as any;
+
+    for (let i = 0; i < filters.length; i++) {
+      const count = await this.model.countDocuments({
+        [`data.${filters[i].key}`]: filters[i].value,
+      });
+      countObj[filters[i].value] = count;
+    }
+
     const groupedFilters = filters.reduce(
         (f: any, a: { key: string; value: string }) => {
           f[a.key] = f[a.key] || [];
@@ -40,7 +49,7 @@ export class CyclistProfileService {
         { key: "collisions", value: "collisions" },
       ];
 
-    const promises = columns.map(async (c) => {
+    const promises = columns.map(async (c, i) => {
       return await Promise.all(
         Object.keys(groupedFilters).map((k) => {
           const _id: any = { [c.key]: `$data.${c.value}` },
@@ -118,7 +127,8 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push({ name: item.day, y: item.total });
+            item.percent = (item.total / countObj[value]) * 100;
+            result.push({ name: item.day, y: item.percent, value: item.total });
           });
 
           const test = {
@@ -139,7 +149,12 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push({ name: item.years_using, y: item.total });
+            item.percent = (item.total / countObj[value]) * 100;
+            result.push({
+              name: item.years_using,
+              y: item.percent,
+              value: item.total,
+            });
           });
 
           const test = {
@@ -160,7 +175,12 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push({ name: item.biggest_need, y: item.total });
+            item.percent = (item.total / countObj[value]) * 100;
+            result.push({
+              name: item.biggest_need,
+              y: item.percent,
+              value: item.total,
+            });
           });
 
           const test = {
@@ -181,7 +201,12 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push({ name: item.motivation_to_start, y: item.total });
+            item.percent = (item.total / countObj[value]) * 100;
+            result.push({
+              name: item.motivation_to_start,
+              y: item.percent,
+              value: item.total,
+            });
           });
 
           const test = {
@@ -202,7 +227,12 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push({ name: item.motivation_to_continue, y: item.total });
+            item.percent = (item.total / countObj[value]) * 100;
+            result.push({
+              name: item.motivation_to_continue,
+              y: item.percent,
+              value: item.total,
+            });
           });
 
           const test = {
@@ -223,7 +253,12 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push({ name: item.biggest_issue, y: item.total });
+            item.percent = (item.total / countObj[value]) * 100;
+            result.push({
+              name: item.biggest_issue,
+              y: item.percent,
+              value: item.total,
+            });
           });
 
           const test = {
@@ -244,7 +279,12 @@ export class CyclistProfileService {
 
         if (valueFromKey !== undefined) {
           valueFromKey.forEach((item: any) => {
-            result.push({ name: item.collisions, y: item.total });
+            item.percent = (item.total / countObj[value]) * 100;
+            result.push({
+              name: item.collisions,
+              y: item.percent,
+              value: item.total,
+            });
           });
 
           const test = {
