@@ -22,7 +22,7 @@ export class CyclistProfileService {
   }
 
   async fetchDashboardData(filters: any[]): Promise<Record<any, any>> {
-    let countObj = {} as any;
+    const countObj = {} as any;
 
     for (let i = 0; i < filters.length; i++) {
       let count = await this.model.countDocuments({
@@ -32,7 +32,7 @@ export class CyclistProfileService {
     }
 
     const groupedFilters = filters.reduce(
-        (f: any, a: { key: string; value: string; count: Number }) => {
+        (f: any, a: { key: string; value: string }) => {
           f[a.key] = f[a.key] || [];
           f[a.key].push(a);
           return f;
