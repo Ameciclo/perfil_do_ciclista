@@ -25,7 +25,7 @@ export class CyclistProfileService {
     const countObj = {} as any;
 
     for (let i = 0; i < filters.length; i++) {
-      let count = await this.model.countDocuments({
+      const count = await this.model.countDocuments({
         [`data.${filters[i].key}`]: filters[i].value,
       });
       countObj[filters[i].value] = count;
