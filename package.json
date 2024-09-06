@@ -24,7 +24,7 @@
     "mongoose": "^5.12.7",
     "mongoose-query-parser": "^1.1.9",
     "morgan": "^1.10.0",
-    "winston": "^3.3.3"
+    "winston": "^3.3.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
